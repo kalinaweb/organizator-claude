@@ -47,3 +47,4 @@ apps/backend/prisma/migrations/
 *.swp
 *.swo
 *~
+node_modules.zip
