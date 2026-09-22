@@ -1,1 +1,5 @@
-export { ProtectedRoute } from './ui/ProtectedRoute';
+<<<<<<< HEAD
+
+=======
+export * from './ui';
+>>>>>>> feature/main-screen-frontend

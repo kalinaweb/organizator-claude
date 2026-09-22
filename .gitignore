@@ -47,6 +47,10 @@ apps/backend/prisma/migrations/
 *.swp
 *.swo
 *~
+<<<<<<< HEAD
 
 
 *.zip
+=======
+
+>>>>>>> feature/main-screen-frontend

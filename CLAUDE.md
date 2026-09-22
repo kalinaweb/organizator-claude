@@ -68,9 +68,13 @@ NestJS modules are organized by resource:
 Each service verifies ownership chain: Tasks check List ownership, Lists check Page ownership, Pages check User ownership.
 
 ### Frontend Architecture
-- App Router structure (`app/` directory)
+- **Feature-Sliced Design (FSD)**: Architecture methodology organizing code by business features
+  - `features/` - Business features (e.g., `features/auth/` for authentication)
+  - Each feature contains: `ui/` (components), `model/` (hooks/state), `api/` (API calls), `index.ts` (public exports)
+  - Pages in `app/` directory import from features via barrel exports
+- App Router structure (`app/` directory) with Next.js 15
 - Material-UI components with Tailwind CSS (preflight disabled to avoid conflicts)
-- React Hook Form + Zod for form validation
+- React Hook Form + Zod for form validation (@hookform/resolvers for integration)
 - API client in `lib/api.ts` with axios interceptors
 - Protected routes checked client-side (redirect to login if no token)
 
@@ -88,8 +92,112 @@ Before first run:
 3. Generate Prisma client: `npm run prisma:generate --workspace=@todo-app/backend`
 4. Run migrations: `npm run prisma:migrate --workspace=@todo-app/backend`
 
+## Feature Structure (Feature-Sliced Design)
+Example feature structure (`features/auth/`):
+```
+features/auth/
+├── index.ts              # Public API (exports)
+├── ui/
+│   ├── LoginForm.tsx     # Login component
+│   └── RegisterForm.tsx  # Registration component
+├── model/
+│   └── useAuth.ts        # Authentication hook
+└── api/
+    └── authApi.ts        # Auth API methods
+```
+
+Pages consume features via their public exports:
+```tsx
+import { LoginForm } from '@/features/auth';
+```
+
+## Commit Conventions
+This project follows conventional commits with messages in Russian:
+
+**Format:**
+```
+<type>: <краткое описание>
+
+<подробное описание изменений>
+- список изменений
+- ...
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
+```
+
+**Types:**
+- `feat` - новая функциональность
+- `fix` - исправление бага
+- `refactor` - рефакторинг без изменения функциональности
+- `docs` - изменения в документации
+- `style` - форматирование кода (без изменения логики)
+- `test` - добавление или обновление тестов
+- `chore` - обновление зависимостей, конфигурации
+
+**Examples:**
+```bash
+# Feature commit
+git commit -m "feat: добавлена функциональность регистрации
+
+Реализована полная система аутентификации с JWT
+- Добавлены страницы /login и /register
+- Создана feature auth по FSD методологии
+- Настроен axios interceptor
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>"
+
+# Bug fix commit
+git commit -m "fix: исправлена ошибка валидации email
+
+Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>"
+```
+
+## Branching Workflow (GitHub Flow)
+
+This project follows **GitHub Flow** for feature development:
+
+**Branch Naming:**
+```
+feature/<feature-name>       # New features
+fix/<bug-description>        # Bug fixes
+refactor/<component-name>    # Refactoring
+docs/<update-description>    # Documentation updates
+```
+
+**Workflow:**
+1. **Create feature branch** from `main`:
+   ```bash
+   git checkout main
+   git pull origin main
+   git checkout -b feature/feature-name
+   ```
+
+2. **Work on feature**: Make commits following commit conventions
+
+3. **Push and create Pull Request**:
+   ```bash
+   git push -u origin feature/feature-name
+   gh pr create --title "feat: краткое описание" --body "Описание изменений"
+   ```
+
+4. **Code Review**: Wait for review approval
+
+5. **Merge to main**: Squash and merge via GitHub UI
+
+6. **Delete feature branch** after merge:
+   ```bash
+   git checkout main
+   git pull origin main
+   git branch -d feature/feature-name
+   ```
+
+**Branch Protection:**
+- Always work in feature branches, never commit directly to `main`
+- `main` branch is the stable branch for production-ready code
+- Create PR for every feature/fix before merging to `main`
+
 ## Important Notes
 - Backend port 3001, frontend port 3000 (hardcoded in `lib/api.ts`)
 - All passwords are hashed with bcryptjs before storage
-- No dependencies have been installed yet - project contains only file structure
 - Documentation is in Russian (README.md)
+- Auth pages implemented: `/login` and `/register` with MUI forms
