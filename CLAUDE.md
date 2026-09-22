@@ -174,3 +174,6 @@ docs/<update-description>    # Documentation updates
 - All passwords are hashed with bcryptjs before storage
 - Documentation is in Russian (README.md)
 - Auth pages implemented: `/login` and `/register` with MUI forms
+
+## Обновление docs
+При добавлении функционала, проверяй документацию в @.claude/docs/\* и актуализируй
