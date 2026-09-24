@@ -30,14 +30,17 @@ export const TaskItem = ({ task, onToggle, onUpdate, onDelete }: TaskItemProps) 
         sx={{
           display: 'flex',
           alignItems: 'center',
-          gap: 1,
-          p: 1,
-          borderRadius: 1,
-          bgcolor: 'background.paper',
-          border: 1,
-          borderColor: 'divider',
+          gap: 1.5,
+          p: 1.5,
+          borderRadius: 2,
+          bgcolor: '#FAFBFC',
+          border: '1px solid',
+          borderColor: '#E8ECEF',
+          transition: 'all 0.2s ease',
           '&:hover': {
-            bgcolor: 'action.hover',
+            bgcolor: '#F5F7F9',
+            borderColor: '#D4DCE4',
+            boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.04)',
           },
         }}
       >
@@ -45,6 +48,12 @@ export const TaskItem = ({ task, onToggle, onUpdate, onDelete }: TaskItemProps) 
           checked={task.completed}
           onChange={(e) => onToggle(e.target.checked)}
           size="small"
+          sx={{
+            color: '#D4DCE4',
+            '&.Mui-checked': {
+              color: '#00BCD4',
+            },
+          }}
         />
         <Box sx={{ flexGrow: 1, minWidth: 0 }}>
           <Typography
@@ -54,20 +63,30 @@ export const TaskItem = ({ task, onToggle, onUpdate, onDelete }: TaskItemProps) 
               color: task.completed ? 'text.secondary' : 'text.primary',
               overflow: 'hidden',
               textOverflow: 'ellipsis',
+              fontWeight: 500,
+              fontSize: '0.9375rem',
             }}
           >
             {task.title}
           </Typography>
           {task.description && (
-            <Typography variant="caption" color="text.secondary" sx={{ display: 'block' }}>
+            <Typography
+              variant="caption"
+              sx={{
+                display: 'block',
+                color: 'text.secondary',
+                mt: 0.5,
+                fontSize: '0.8125rem',
+              }}
+            >
               {task.description}
             </Typography>
           )}
         </Box>
-        <IconButton size="small" onClick={() => setEditDialogOpen(true)}>
+        <IconButton size="small" onClick={() => setEditDialogOpen(true)} sx={{ opacity: 0.6, '&:hover': { opacity: 1 } }}>
           <Edit fontSize="small" />
         </IconButton>
-        <IconButton size="small" onClick={onDelete}>
+        <IconButton size="small" onClick={onDelete} sx={{ opacity: 0.6, '&:hover': { opacity: 1 } }}>
           <Delete fontSize="small" />
         </IconButton>
       </Box>

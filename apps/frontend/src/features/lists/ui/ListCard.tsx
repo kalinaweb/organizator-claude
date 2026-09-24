@@ -1,6 +1,6 @@
 'use client';
 
-import { Card, CardHeader, CardContent, IconButton, Box, TextField, Button } from '@mui/material';
+import { Card, CardHeader, CardContent, IconButton, Box, TextField, Button, Typography } from '@mui/material';
 import { Delete, Edit, Add } from '@mui/icons-material';
 import { useState, useEffect } from 'react';
 import { TaskItem } from '@/features/tasks/ui/TaskItem';
@@ -39,14 +39,23 @@ export const ListCard = ({ list, onUpdateList, onDeleteList }: ListCardProps) =>
     }
   };
 
+  const completedCount = tasks.filter(t => t.completed).length;
+  const totalCount = tasks.length;
+  const progress = totalCount > 0 ? (completedCount / totalCount) * 100 : 0;
+
   return (
     <Card
       sx={{
-        minWidth: 300,
-        maxWidth: 350,
+        minWidth: 320,
+        maxWidth: 370,
         height: 'fit-content',
         display: 'flex',
         flexDirection: 'column',
+        bgcolor: 'background.paper',
+        transition: 'all 0.2s ease',
+        '&:hover': {
+          boxShadow: '0px 8px 24px rgba(0, 0, 0, 0.1)',
+        },
       }}
     >
       <CardHeader
@@ -65,7 +74,9 @@ export const ListCard = ({ list, onUpdateList, onDeleteList }: ListCardProps) =>
               fullWidth
             />
           ) : (
-            list.title
+            <Typography variant="h6" sx={{ fontWeight: 700, fontSize: '1.125rem' }}>
+              {list.title}
+            </Typography>
           )
         }
         action={
@@ -78,9 +89,42 @@ export const ListCard = ({ list, onUpdateList, onDeleteList }: ListCardProps) =>
             </IconButton>
           </Box>
         }
+        sx={{ pb: 1.5 }}
       />
+
+      {totalCount > 0 && (
+        <Box sx={{ px: 2, pb: 2 }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+            <Typography variant="caption" sx={{ color: 'text.secondary', fontWeight: 500 }}>
+              Прогресс
+            </Typography>
+            <Typography variant="caption" sx={{ color: 'text.secondary', fontWeight: 600 }}>
+              {completedCount}/{totalCount}
+            </Typography>
+          </Box>
+          <Box
+            sx={{
+              width: '100%',
+              height: 6,
+              bgcolor: '#E8ECEF',
+              borderRadius: 3,
+              overflow: 'hidden',
+            }}
+          >
+            <Box
+              sx={{
+                width: `${progress}%`,
+                height: '100%',
+                background: 'linear-gradient(90deg, #00BCD4 0%, #00ACC1 100%)',
+                transition: 'width 0.3s ease',
+              }}
+            />
+          </Box>
+        </Box>
+      )}
+
       <CardContent sx={{ flexGrow: 1, pt: 0 }}>
-        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
           {tasks.map((task) => (
             <TaskItem
               key={task.id}
@@ -92,7 +136,7 @@ export const ListCard = ({ list, onUpdateList, onDeleteList }: ListCardProps) =>
           ))}
 
           {isAddingTask ? (
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1, mt: 1 }}>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5, mt: 1 }}>
               <TextField
                 size="small"
                 placeholder="Название задачи"
@@ -106,7 +150,7 @@ export const ListCard = ({ list, onUpdateList, onDeleteList }: ListCardProps) =>
                 fullWidth
               />
               <Box sx={{ display: 'flex', gap: 1 }}>
-                <Button size="small" onClick={handleAddTask} variant="contained">
+                <Button size="small" onClick={handleAddTask} variant="contained" sx={{ fontWeight: 600 }}>
                   Добавить
                 </Button>
                 <Button size="small" onClick={() => setIsAddingTask(false)}>
@@ -119,7 +163,12 @@ export const ListCard = ({ list, onUpdateList, onDeleteList }: ListCardProps) =>
               startIcon={<Add />}
               onClick={() => setIsAddingTask(true)}
               size="small"
-              sx={{ mt: 1 }}
+              sx={{
+                mt: 1,
+                color: 'text.secondary',
+                fontWeight: 500,
+                justifyContent: 'flex-start',
+              }}
             >
               Добавить задачу
             </Button>

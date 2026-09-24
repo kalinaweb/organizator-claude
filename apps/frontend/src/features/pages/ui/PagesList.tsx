@@ -67,18 +67,24 @@ export const PagesList = ({
 
   return (
     <>
-      <Box sx={{ p: 2 }}>
+      <Box sx={{ p: 2.5 }}>
         <Button
           fullWidth
           variant="contained"
           startIcon={<Add />}
           onClick={() => setCreateDialogOpen(true)}
+          sx={{
+            py: 1.25,
+            fontWeight: 600,
+            background: 'linear-gradient(135deg, #9ce1f8 0%, #4f9ff8 100%)',
+            color: '#fff',
+          }}
         >
           Новая страница
         </Button>
       </Box>
 
-      <List>
+      <List sx={{ px: 1.5 }}>
         {pages.map((page) => (
           <ListItem
             key={page.id}
@@ -93,12 +99,28 @@ export const PagesList = ({
                 </IconButton>
               </Box>
             }
+            sx={{ mb: 0.5 }}
           >
             <ListItemButton
               selected={selectedPageId === page.id}
               onClick={() => onSelectPage(page.id)}
+              sx={{
+                borderRadius: 2,
+                '&.Mui-selected': {
+                  bgcolor: 'rgba(0, 188, 212, 0.08)',
+                  '&:hover': {
+                    bgcolor: 'rgba(0, 188, 212, 0.12)',
+                  },
+                },
+              }}
             >
-              <ListItemText primary={page.title} />
+              <ListItemText
+                primary={page.title}
+                primaryTypographyProps={{
+                  fontWeight: selectedPageId === page.id ? 600 : 500,
+                  fontSize: '0.9375rem',
+                }}
+              />
             </ListItemButton>
           </ListItem>
         ))}

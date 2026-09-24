@@ -1,6 +1,6 @@
 'use client';
 
-import { Box, Button, Typography } from '@mui/material';
+import { Box, Button, Card, TextField, Typography } from '@mui/material';
 import { Add } from '@mui/icons-material';
 import { useState } from 'react';
 import { ListCard } from './ListCard';
@@ -26,13 +26,21 @@ export const ListsWorkspace = ({ pageId, pageTitle }: ListsWorkspaceProps) => {
   };
 
   return (
-    <Box sx={{ p: 3 }}>
-      <Box sx={{ mb: 3, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <Typography variant="h5">{pageTitle}</Typography>
+    <Box sx={{ p: 4 }}>
+      <Box sx={{ mb: 4, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <Typography variant="h4" sx={{ fontWeight: 700, color: 'text.primary' }}>
+          {pageTitle}
+        </Typography>
         <Button
           variant="contained"
           startIcon={<Add />}
           onClick={() => setIsAdding(true)}
+          sx={{
+            px: 3,
+            py: 1.25,
+            fontWeight: 600,
+            boxShadow: '0px 4px 12px rgba(0, 188, 212, 0.25)',
+          }}
         >
           Добавить список
         </Button>
@@ -49,10 +57,24 @@ export const ListsWorkspace = ({ pageId, pageTitle }: ListsWorkspaceProps) => {
         <Box
           sx={{
             display: 'flex',
-            gap: 2,
+            gap: 3,
             overflowX: 'auto',
-            pb: 2,
+            pb: 3,
             alignItems: 'flex-start',
+            '&::-webkit-scrollbar': {
+              height: 8,
+            },
+            '&::-webkit-scrollbar-track': {
+              bgcolor: '#F0F2F5',
+              borderRadius: 4,
+            },
+            '&::-webkit-scrollbar-thumb': {
+              bgcolor: '#C4CDD5',
+              borderRadius: 4,
+              '&:hover': {
+                bgcolor: '#A8B3BD',
+              },
+            },
           }}
         >
           {lists.map((list) => (
@@ -65,23 +87,25 @@ export const ListsWorkspace = ({ pageId, pageTitle }: ListsWorkspaceProps) => {
           ))}
 
           {isAdding && (
-            <Box sx={{ minWidth: 300, maxWidth: 350 }}>
-              <input
-                type="text"
+            <Card sx={{ minWidth: 320, maxWidth: 370, p: 2 }}>
+              <TextField
                 placeholder="Название списка"
                 value={newListTitle}
                 onChange={(e) => setNewListTitle(e.target.value)}
                 onKeyPress={(e) => e.key === 'Enter' && handleCreateList()}
                 autoFocus
-                style={{ width: '100%', padding: '8px', marginBottom: '8px' }}
+                fullWidth
+                sx={{ mb: 2 }}
               />
-              <Button onClick={handleCreateList} size="small" variant="contained">
-                Создать
-              </Button>
-              <Button onClick={() => setIsAdding(false)} size="small" sx={{ ml: 1 }}>
-                Отмена
-              </Button>
-            </Box>
+              <Box sx={{ display: 'flex', gap: 1 }}>
+                <Button onClick={handleCreateList} size="small" variant="contained" sx={{ fontWeight: 600 }}>
+                  Создать
+                </Button>
+                <Button onClick={() => setIsAdding(false)} size="small">
+                  Отмена
+                </Button>
+              </Box>
+            </Card>
           )}
         </Box>
       )}

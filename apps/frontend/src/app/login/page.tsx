@@ -1,5 +1,14 @@
-import { LoginForm } from '@/features/auth';
+'use client';
+
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 export default function LoginPage() {
-  return <LoginForm />;
+  const router = useRouter();
+
+  useEffect(() => {
+    router.replace('/welcome');
+  }, [router]);
+
+  return null;
 }
