@@ -105,26 +105,6 @@ Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
 **Examples:**
 ```bash
 
-<important if="Нужно написать commit">
-
-# Feature commit
-git commit -m "feat: добавлена функциональность регистрации
-
-Реализована полная система аутентификации с JWT
-- Добавлены страницы /login и /register
-- Создана feature auth по FSD методологии
-- Настроен axios interceptor
-
-Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>"
-
-# Bug fix commit
-git commit -m "fix: исправлена ошибка валидации email
-
-Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>"
-```
-
-</important>
-
 ## Branching Workflow (GitHub Flow)
 
 This project follows **GitHub Flow** for feature development:
