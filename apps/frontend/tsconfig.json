@@ -19,6 +19,7 @@
       }
     ],
     "paths": {
+      "@todo-app/shared": ["../../packages/shared/src/index.ts"],
       "@/*": ["./src/*"]
     }
   },
