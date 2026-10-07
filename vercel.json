@@ -11,7 +11,8 @@
 			"headers": [
 				{
 					"key": "Access-Control-Allow-Origin",
-					"value": "https://organizator-claude-frontend-rs8z.vercel.app"
+					"value": env("FRONTEND_URL")
+				}
 				},
 				{
 					"key": "Access-Control-Allow-Methods",
