@@ -11,8 +11,7 @@
 			"headers": [
 				{
 					"key": "Access-Control-Allow-Origin",
-					"value": env("FRONTEND_URL")
-				}
+					"value": "https://organizator-claude-frontend-rs8z-m1z356l5l-kalinweb.vercel.app"
 				},
 				{
 					"key": "Access-Control-Allow-Methods",
