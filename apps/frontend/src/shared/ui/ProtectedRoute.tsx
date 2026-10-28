@@ -1,20 +1,21 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { CircularProgress, Box } from '@mui/material';
+import { useRouter } from 'next/navigation';
+import { isAuthenticated, isLocalMode } from '@/lib/auth';
 
 export function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const [isChecking, setIsChecking] = useState(true);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (!token) {
+    const authenticated = isAuthenticated();
+    const local = isLocalMode();
+    if (!authenticated && !local) {
       router.push('/welcome');
-    } else {
-      setIsChecking(false);
     }
+    setIsChecking(false);
   }, [router]);
 
   if (isChecking) {

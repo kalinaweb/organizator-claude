@@ -1,10 +1,20 @@
 'use client';
 
 import { useState } from 'react';
-import { Box, Container, Typography, Button, TextField, Card, InputAdornment, IconButton, Alert } from '@mui/material';
+import { Box, Container, Typography, Button, TextField, Card, InputAdornment, IconButton, Alert, LinearProgress } from '@mui/material';
 import { CheckCircle, Email, Lock, Person, Visibility, VisibilityOff } from '@mui/icons-material';
 import { useRouter } from 'next/navigation';
 import { authApi } from '@/features/auth';
+import { enterLocalMode } from '@/lib/auth';
+import { pagesApi } from '@/features/pages';
+import { listsApi } from '@/features/lists';
+import { tasksApi } from '@/features/tasks';
+import {
+  getLocalPages,
+  getAllLocalLists,
+  getAllLocalTasks,
+  STORAGE_KEYS,
+} from '@/lib/storage';
 
 const features = [
   {
@@ -26,6 +36,7 @@ export default function WelcomePage() {
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [syncing, setSyncing] = useState(false);
   const [error, setError] = useState('');
 
   const [formData, setFormData] = useState({
@@ -33,6 +44,65 @@ export default function WelcomePage() {
     email: '',
     password: '',
   });
+
+  const syncLocalStorageToServer = async () => {
+    const localPages = getLocalPages();
+    if (localPages.length === 0) return;
+
+    const pageMapping: Record<string, string> = {};
+
+    // Sync pages
+    for (const localPage of localPages) {
+      try {
+        const serverPage = await pagesApi.create({ title: localPage.title });
+        pageMapping[localPage.localId] = serverPage.id;
+      } catch (err) {
+        console.error('Failed to sync page:', localPage.localId, err);
+      }
+    }
+
+    // Sync lists
+    const localLists = getAllLocalLists();
+    const listMapping: Record<string, string> = {};
+
+    for (const localList of localLists) {
+      const serverPageId = pageMapping[localList.pageId];
+      if (!serverPageId) continue;
+
+      try {
+        const serverList = await listsApi.create({
+          title: localList.title,
+          pageId: serverPageId,
+        });
+        listMapping[localList.localId] = serverList.id;
+      } catch (err) {
+        console.error('Failed to sync list:', localList.localId, err);
+      }
+    }
+
+    // Sync tasks
+    const localTasks = getAllLocalTasks();
+
+    for (const localTask of localTasks) {
+      const serverListId = listMapping[localTask.listId];
+      if (!serverListId) continue;
+
+      try {
+        await tasksApi.create({
+          title: localTask.title,
+          listId: serverListId,
+          description: localTask.description,
+        });
+      } catch (err) {
+        console.error('Failed to sync task:', localTask.localId, err);
+      }
+    }
+
+    // Clear all local storage after successful sync
+    localStorage.setItem(STORAGE_KEYS.PAGES, '[]');
+    localStorage.setItem(STORAGE_KEYS.LISTS, '[]');
+    localStorage.setItem(STORAGE_KEYS.TASKS, '[]');
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -53,6 +123,16 @@ export default function WelcomePage() {
           password: formData.password,
         });
         localStorage.setItem('token', accessToken);
+
+        // Sync local data to server
+        setSyncing(true);
+        try {
+          await syncLocalStorageToServer();
+        } catch (err) {
+          console.error('Sync failed:', err);
+        } finally {
+          setSyncing(false);
+        }
       }
       router.push('/');
     } catch (err: any) {
@@ -148,6 +228,15 @@ export default function WelcomePage() {
                 </Alert>
               )}
 
+              {syncing && (
+                <Box sx={{ mb: 3 }}>
+                  <Typography variant="body2" sx={{ color: 'text.secondary', mb: 1, textAlign: 'center' }}>
+                    Синхронизация данных...
+                  </Typography>
+                  <LinearProgress />
+                </Box>
+              )}
+
               <Box component="form" onSubmit={handleSubmit}>
                 {!isLogin && (
                   <TextField
@@ -216,7 +305,7 @@ export default function WelcomePage() {
                   type="submit"
                   variant="contained"
                   size="large"
-                  disabled={loading}
+                  disabled={loading || syncing}
                   sx={{
                     py: 1.5,
                     fontWeight: 600,
@@ -230,6 +319,32 @@ export default function WelcomePage() {
                   }}
                 >
                   {loading ? 'Загрузка...' : isLogin ? 'Войти' : 'Зарегистрироваться'}
+                </Button>
+
+                <Button
+                  fullWidth
+                  variant="outlined"
+                  size="large"
+                  onClick={() => {
+                    enterLocalMode();
+                    router.push('/');
+                  }}
+                  sx={{
+                    py: 1.5,
+                    fontWeight: 600,
+                    fontSize: '1rem',
+                    mb: 2,
+                    color: '#4f9ff8',
+                    borderColor: '#4f9ff8',
+                    borderWidth: '2px',
+                    '&:hover': {
+                      borderColor: '#4590e6',
+                      borderWidth: '2px',
+                      background: 'rgba(79, 159, 248, 0.08)',
+                    },
+                  }}
+                >
+                  Попробовать без регистрации
                 </Button>
 
                 <Box sx={{ textAlign: 'center' }}>

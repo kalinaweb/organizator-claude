@@ -1,25 +1,37 @@
 'use client';
 
 import { AppBar, Toolbar, Typography, Button, Box, IconButton, Menu, MenuItem, Avatar } from '@mui/material';
+import { useRouter } from 'next/navigation';
 import { AccountCircle, Logout } from '@mui/icons-material';
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/features/auth';
 import { authApi } from '@/features/auth';
+import { isAuthenticated, isLocalMode, logout, exitLocalMode } from '@/lib/auth';
 import type { User } from '@todo-app/shared';
 
 export const TopAppBar = () => {
-  const { logout } = useAuth();
+  const router = useRouter();
+  const { logout: authLogout } = useAuth();
   const [user, setUser] = useState<User | null>(null);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [isAuth, setIsAuth] = useState(false);
+  const [isLocal, setIsLocal] = useState(false);
 
   useEffect(() => {
-    let mounted = true;
-    authApi.getCurrentUser()
-      .then(user => mounted && setUser(user))
-      .catch(() => {});
-    return () => {
-      mounted = false;
-    };
+    const authenticated = isAuthenticated();
+    const local = isLocalMode();
+    setIsAuth(authenticated);
+    setIsLocal(local);
+
+    if (authenticated) {
+      let mounted = true;
+      authApi.getCurrentUser()
+        .then(u => mounted && setUser(u))
+        .catch(() => {});
+      return () => {
+        mounted = false;
+      };
+    }
   }, []);
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -32,7 +44,12 @@ export const TopAppBar = () => {
 
   const handleLogout = () => {
     handleClose();
-    logout();
+    if (isLocal && !isAuth) {
+      exitLocalMode();
+    } else {
+      authLogout();
+    }
+    router.push('/welcome');
   };
 
   return (
@@ -75,7 +92,7 @@ export const TopAppBar = () => {
           </Typography>
         </Box>
 
-        {user && (
+        {isAuth && user ? (
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
             <Typography variant="body2" sx={{ color: 'text.secondary', fontWeight: 500 }}>
               {user.name || user.email}
@@ -118,6 +135,27 @@ export const TopAppBar = () => {
                 <Typography variant="body2">Выйти</Typography>
               </MenuItem>
             </Menu>
+          </Box>
+        ) : (
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            {isLocal && (
+              <Button
+                variant="outlined"
+                size="small"
+                onClick={() => {
+                  exitLocalMode();
+                  router.push('/welcome');
+                }}
+                sx={{
+                  px: 3,
+                  py: 1.25,
+                  fontWeight: 600,
+                  boxShadow: '0px 4px 12px rgba(0, 188, 212, 0.25)',
+                }}
+              >
+                Зарегистрироваться
+              </Button>
+            )}            
           </Box>
         )}
       </Toolbar>

@@ -96,3 +96,33 @@ export interface ApiError {
   statusCode: number;
   error?: string;
 }
+
+// ==================== Local Storage Types ====================
+// Used when user is not authenticated
+
+export interface LocalPage {
+  localId: string;
+  title: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface LocalList {
+  localId: string;
+  title: string;
+  pageId: string;
+  order: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface LocalTask {
+  localId: string;
+  title: string;
+  description?: string;
+  completed: boolean;
+  listId: string;
+  order: number;
+  createdAt: string;
+  updatedAt: string;
+}

@@ -49,7 +49,7 @@ export default function Home() {
 
   return (
     <ProtectedRoute>
-      <Box sx={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
+      <Box sx={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>        
         <TopAppBar />
 
         <Box sx={{ display: 'flex', flexGrow: 1, overflow: 'hidden' }}>
