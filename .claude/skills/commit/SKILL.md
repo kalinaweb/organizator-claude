@@ -116,8 +116,6 @@ refactor: упрощена логика обработки задач
 - Объединены методы validateTask и checkTaskPermissions
 - Убраны неиспользуемые импорты
 
-Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
-EOF
 )"
 ```
 
