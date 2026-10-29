@@ -214,7 +214,7 @@ export function getAllLocalTasks(): LocalTask[] {
  * @param createFn - Async function to create item on server
  * @returns Record mapping localId → serverId
  */
-export async function syncLocalToServer<T extends { localId: string }>(
+export async function syncLocalToServer<T extends { localId: string; title: string }>(
   localItems: T[],
   serverItems: { id: string }[],
   localKey: string,
