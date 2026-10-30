@@ -1,0 +1,8 @@
+{
+  "compilerOptions": {
+    "webpack": true,
+    "tsConfigPath": "apps/backend/tsconfig.json",
+    "assets": ["apps/backend/prisma/**/*"],
+    "watchAssets": true
+  }
+}
