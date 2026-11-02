@@ -13,6 +13,7 @@
     "build:frontend": "npm run build --workspace=@todo-app/frontend",
     "build:backend": "npm run build --workspace=@todo-app/backend",
     "build": "npm run build:backend && npm run build:frontend",
+    "start": "npm run start:prod --workspace=@todo-app/backend",
     "lint": "npm run lint --workspaces --if-present",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,css,scss,md}\""
   },
