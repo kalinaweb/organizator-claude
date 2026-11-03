@@ -20,7 +20,13 @@ export class PrismaService
    * @returns Промис, разрешающийся после успешного подключения.
    */
   async onModuleInit() {
-    await this.$connect();
+    try {
+      await this.$connect();
+      console.log('Database connected successfully');
+    } catch (error) {
+      console.error('Failed to connect to database:', error.message);
+      console.log('Server will start without database (requests will fail)');
+    }
   }
 
   /**

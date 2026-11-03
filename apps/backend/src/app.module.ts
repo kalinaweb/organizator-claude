@@ -10,6 +10,13 @@ import { TasksModule } from './tasks/tasks.module';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+      envFilePath: '.env',
+      validate: (config) => {
+        if (!config.DATABASE_URL) {
+          throw new Error('DATABASE_URL is not set');
+        }
+        return config;
+      },
     }),
     PrismaModule,
     AuthModule,
