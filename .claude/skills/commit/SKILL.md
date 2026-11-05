@@ -22,7 +22,6 @@ This project follows conventional commits with messages in Russian.
 - список изменений
 - ...
 
-Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
 ```
 
 ### Types
@@ -59,8 +58,6 @@ Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
    <подробное описание>
    - список изменений
    
-   Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
-   EOF
    )"
    ```
 

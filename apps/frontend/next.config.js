@@ -9,6 +9,17 @@ const nextConfig = {
   experimental: {
     staticPageGenerationTimeout: 300,
   },
+  async rewrites() {
+    return [
+      {
+        source: '/api/:path*',
+        destination:
+          process.env.NODE_ENV === 'development'
+            ? 'http://localhost:3001/api/:path*'
+            : 'http://localhost:3001/api/:path*',
+      },
+    ]
+  },
 }
 
 module.exports = nextConfig

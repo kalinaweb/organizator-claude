@@ -50,3 +50,5 @@ apps/backend/prisma/migrations/
 
 *.zip
 
+GIGACODE.md
+.gigacode_vsc/*
