@@ -55,7 +55,7 @@ export class TasksService {
         title: data.title,
         description: data.description,
         listId,
-        order: maxOrder ? maxOrder.order + 1 : 0,
+        order: maxOrder ? maxOrder.order + 100 : 100,
       },
     });
   }

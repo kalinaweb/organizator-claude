@@ -93,14 +93,14 @@ export function createLocalList(title: string, pageId: string): LocalList {
   const lists = getLocalLists(pageId);
   const maxOrder = lists.reduce(
     (max, l) => (l.order > max ? l.order : max),
-    -1
+    0
   );
 
   const list: LocalList = {
     localId: generateId(),
     title,
     pageId,
-    order: maxOrder + 1,
+    order: maxOrder + 100,
     createdAt: now(),
     updatedAt: now(),
   };
@@ -155,7 +155,7 @@ export function createLocalTask(
   const tasks = getLocalTasks(listId);
   const maxOrder = tasks.reduce(
     (max, t) => (t.order > max ? t.order : max),
-    -1
+    0
   );
 
   const task: LocalTask = {
@@ -164,7 +164,7 @@ export function createLocalTask(
     description,
     completed: false,
     listId,
-    order: maxOrder + 1,
+    order: maxOrder + 100,
     createdAt: now(),
     updatedAt: now(),
   };

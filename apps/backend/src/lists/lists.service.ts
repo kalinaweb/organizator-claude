@@ -46,7 +46,7 @@ export class ListsService {
       data: {
         title,
         pageId,
-        order: maxOrder ? maxOrder.order + 1 : 0,
+        order: maxOrder ? maxOrder.order + 100 : 100,
       },
     });
   }

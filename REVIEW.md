@@ -137,7 +137,6 @@ async findOne(id: string) {
 ### Git и документация
 - [ ] Commit message следует conventional commits (feat/fix/refactor/docs)
 - [ ] Commit message на русском языке
-- [ ] Attribution строка `Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>` присутствует
 - [ ] PR description описывает изменения и test plan
 - [ ] Обновлен CLAUDE.md при изменении архитектуры
 

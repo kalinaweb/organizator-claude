@@ -89,8 +89,6 @@ feat: добавлена функциональность регистрации
 - Создана feature auth по FSD методологии
 - Настроен axios interceptor
 
-Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
-EOF
 )"
 ```
 
@@ -99,8 +97,6 @@ EOF
 git commit -m "$(cat <<'EOF'
 fix: исправлена ошибка валидации email
 
-Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
-EOF
 )"
 ```
 

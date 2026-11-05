@@ -596,9 +596,7 @@ git add .
 git commit -m "feat: добавлена новая функциональность
 
 Подробное описание изменений
-- список изменений
-
-Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>"
+- список изменений"
 
 # 3. Push и создание PR
 git push -u origin feature/feature-name
@@ -623,7 +621,6 @@ git branch -d feature/feature-name
 - список изменений
 - ...
 
-Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
 ```
 
 **Types:**
@@ -644,7 +641,6 @@ feat: добавлена аутентификация через JWT
 - Auth guard для защиты endpoints
 - Хеширование паролей через bcryptjs
 
-Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
 ```
 
 ```bash
@@ -652,7 +648,6 @@ fix: исправлена проверка владения в TasksService
 
 Добавлена проверка userId через цепочку task → list → page
 
-Co-Authored-By: Claude Sonnet 5 <noreply@anthropic.com>
 ```
 
 ---
