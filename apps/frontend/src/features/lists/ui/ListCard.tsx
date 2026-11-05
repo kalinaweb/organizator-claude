@@ -128,6 +128,7 @@ export const ListCard = ({ list, onUpdateList, onDeleteList }: ListCardProps) =>
           {tasks.map((task) => (
             <TaskItem
               key={task.id}
+              listId={list.id}
               task={task}
               onToggle={(completed) => toggleTask(task.id, completed)}
               onUpdate={(title, description) => updateTask(task.id, { title, description })}
