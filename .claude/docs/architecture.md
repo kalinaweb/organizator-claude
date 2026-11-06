@@ -58,11 +58,20 @@ src/
 - Импорты из фич только через публичный API: `import { LoginForm } from '@/features/auth'`
 - Прямые импорты из внутренних слоёв запрещены
 
-### Axios interceptors
+### Drag-and-Drop (Pragmatic Drag and Drop)
 
-HTTP-клиент настроен в `lib/api.ts`:
-- **Request interceptor** — автоматически добавляет JWT токен из `localStorage` в заголовок `Authorization: Bearer <token>`
-- **Response interceptor** — при 401 ошибке удаляет токен и редиректит на `/login`
+Реализация перетаскивания задач между списками:
+
+- **Библиотека:** `@atlaskit/pragmatic-drag-and-drop`
+- **TaskItem.tsx** — `draggable` для источника перетаскивания, `dropTargetForElements` для приёма (пустой)
+- **ListCard.tsx** — `dropTargetForElements` на карточке списка + `monitorForElements` для отслеживания текущего drop target
+- **Алгоритм order:**
+  - Шаг 1000 даёт запас ~10 вставок между любыми двумя задачами
+  - При вставке между задачами: `newOrder = Math.floor((prevOrder + targetOrder) / 2)`
+  - При перемещении между списками: вызывается `resort()` для целевого списка
+  - При `order < 100` (риск исчерпания): вызывается `resort()` для fallback
+- **Синхронизация:** `useRef` хранит актуальные `sortedTasks` и `resortTasks` внутри замыкания DnD
+- **Cross-list:** при перемещении между списками рефетчатся оба списка (источник + целевой)
 
 ### Аутентификация на frontend
 
@@ -264,6 +273,27 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 ```
 
 ## Взаимодействие Frontend ↔ Backend
+
+### Перетаскивание задач (Drag-and-Drop)
+
+**Флоу при перемещении задачи:**
+
+1. **TaskItem** — `draggable` с данными `{ listId, taskId, order }`
+2. **ListCard** — `dropTargetForElements` принимает задачу
+3. **ListCard** — `monitorForElements` отслеживает текущий drop target (элемент под курсором)
+4. **ListCard** — вычисляет `newOrder` на основе позиции drop target
+5. **ListCard** — вызывает `reorderTask(taskId, newTargetListId, newOrder)` → `PUT /tasks/:id`
+6. **Если перемещён между списками:**
+   - Бэкенд обновляет `listId` и `order` задачи
+   - Frontend вызывает `resortTasks()` → `PUT /tasks/resort` для целевого списка
+   - Frontend рефетчит исходный список через `onRefetchSourceList`
+7. **Если `order < 100`:**
+   - Вызывается `resortTasks()` для fallback пересчёта
+
+**Backend:**
+- `PUT /tasks/:id` — обновляет задачу, при смене `listId` проверяет владение новым списком
+- `PUT /tasks/resort` — пересчитывает `order` всех задач списка линейно (1000, 2000, 3000...)
+- Маршрут `/tasks/resort` объявлен **до** `/tasks/:id` в контроллере (важно для роутинга NestJS)
 
 ### Типичный флоу запроса
 

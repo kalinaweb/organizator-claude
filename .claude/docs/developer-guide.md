@@ -230,7 +230,33 @@ import { LoginForm } from '@/features/auth';
 import { LoginForm } from '@/features/auth/ui/LoginForm';
 ```
 
-### Создание новой фичи
+### Drag-and-Drop задач
+
+Перетаскивание задач между списками реализовано через `@atlaskit/pragmatic-drag-and-drop`:
+
+**Компоненты:**
+- `TaskItem` — `draggable` (источник) + `dropTargetForElements` (приём внутри списка)
+- `ListCard` — `dropTargetForElements` на карточке + `monitorForElements` для отслеживания позиции курсора
+
+**Алгоритм order:**
+```typescript
+// Шаг 1000 даёт запас ~10 вставок между любыми двумя задачами
+const ORDER_GAP = 1000;
+
+// Вставка между задачами
+newOrder = Math.floor((prevOrder + targetOrder) / 2);
+
+// В конец списка
+newOrder = Math.max(...tasks.map(t => t.order)) + ORDER_GAP;
+```
+
+**Resort (пересчёт):**
+- `PUT /tasks/resort` — пересчитывает все `order` линейно (1000, 2000, 3000...)
+- Вызывается при перемещении между списками или при `order < 100` (fallback)
+
+**Sync:**
+- При cross-list перемещении рефетчатся оба списка (источник + целевой)
+- `useRef` хранит актуальные данные внутри замыкания DnD
 
 1. Создать директорию в `src/features/<feature-name>/`
 2. Создать слои: `ui/`, `api/`, `model/`, `types/`

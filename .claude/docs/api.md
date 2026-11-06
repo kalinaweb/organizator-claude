@@ -631,6 +631,55 @@ http://localhost:3001/api
 
 ---
 
+### PUT /tasks/resort
+
+Пересчитывает `order` всех задач в списке линейно (1000, 2000, 3000...).
+Вызывается при перемещении задачи между списками для предотвращения "уплывания" `order` к 0.
+
+**Request:**
+```json
+{
+  "listId": "uuid"
+}
+```
+
+**Response:** `200 OK`
+```json
+[
+  {
+    "id": "uuid",
+    "title": "Buy groceries",
+    "description": "Milk, eggs, bread",
+    "completed": false,
+    "listId": "uuid",
+    "order": 1000,
+    "createdAt": "2026-09-22T10:10:00.000Z",
+    "updatedAt": "2026-09-22T10:10:00.000Z"
+  },
+  {
+    "id": "uuid",
+    "title": "Walk the dog",
+    "description": null,
+    "completed": true,
+    "listId": "uuid",
+    "order": 2000,
+    "createdAt": "2026-09-22T11:00:00.000Z",
+    "updatedAt": "2026-09-22T12:00:00.000Z"
+  }
+]
+```
+
+**Notes:**
+- Задачи возвращаются в порядке сортировки по `order` (возрастание)
+- Новые `order` вычисляются как `(index + 1) * 1000`
+- Используется транзакция Prisma для атомарности обновления
+
+**Errors:**
+- `401 Unauthorized` — отсутствует или невалидный JWT токен
+- `404 Not Found` — список не найден или не принадлежит текущему пользователю
+
+---
+
 ## HTTP Status Codes
 
 ### Success codes
