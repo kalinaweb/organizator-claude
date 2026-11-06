@@ -124,6 +124,58 @@ export const useTasks = (listId: string | null) => {
     return updateTask(id, { completed });
   };
 
+  const reorderTask = async (id: string, listId: string, order: number) => {
+    try {
+      if (isAuthenticated()) {
+        const updated = await tasksApi.reorder(id, listId, order);
+        setTasks((prev) => prev.map((t) => (t.id === id ? updated : t)));
+        return updated;
+      } else {
+        updateLocalTaskStorage(id, { listId, order });
+        setTasks((prev) =>
+          prev.map((t) =>
+            t.id === id
+              ? {
+                  ...t,
+                  listId,
+                  order,
+                  updatedAt: new Date(),
+                }
+              : t
+          )
+        );
+        return;
+      }
+    } catch (err: any) {
+      setError(err.response?.data?.message || 'Failed to reorder task');
+      throw err;
+    }
+  };
+
+  const resortTasks = async () => {
+    try {
+      if (!listId) return;
+      if (isAuthenticated()) {
+        const updated = await tasksApi.resort(listId);
+        setTasks(updated);
+        return updated;
+      } else {
+        // Для локального режима пересчитаем order линейно
+        const localTasks = getLocalTasks(listId);
+        const sorted = [...localTasks].sort((a, b) => a.order - b.order);
+        sorted.forEach((t, i) => {
+          updateLocalTaskStorage(t.localId, { order: (i + 1) * 1000 });
+        });
+        const updatedTasks = sorted.map(localTaskToDisplay);
+        setTasks(updatedTasks);
+        return updatedTasks;
+      }
+    } catch (err: any) {
+      setError(err.response?.data?.message || 'Failed to resort tasks');
+      throw err;
+    }
+  };
+
   useEffect(() => {
     fetchTasks();
   }, [fetchTasks]);
@@ -135,6 +187,8 @@ export const useTasks = (listId: string | null) => {
     refetch: fetchTasks,
     createTask,
     updateTask,
+    reorderTask,
+    resortTasks,
     deleteTask,
     toggleTask,
   };

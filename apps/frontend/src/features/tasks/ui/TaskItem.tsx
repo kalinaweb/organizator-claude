@@ -3,7 +3,7 @@
 import { Box, Checkbox, Typography, IconButton, TextField, Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
 import { Delete, Edit } from '@mui/icons-material';
 import { useState, useRef, useEffect } from 'react';
-import { draggable } from '@atlaskit/pragmatic-drag-and-drop/adapter/element-adapter';
+import { draggable, dropTargetForElements } from '@atlaskit/pragmatic-drag-and-drop/adapter/element-adapter';
 import type { Task } from '@todo-app/shared';
 
 interface TaskItemProps {
@@ -35,12 +35,7 @@ export const TaskItem = ({ task, listId, onToggle, onUpdate, onDelete }: TaskIte
           order: task.order,
         },
       }),
-      onDragStart: () => {
-        console.log('DRAG START:', {
-          listId,
-          taskId: task.id,
-          order: task.order,
-        });
+      onDragStart: () => {        
         setIsDragging(true);
       },
       onDrop: () => {
@@ -54,6 +49,21 @@ export const TaskItem = ({ task, listId, onToggle, onUpdate, onDelete }: TaskIte
     return cleanup;
   }, [listId, task.id, task.order]);
 
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+
+    const cleanup = dropTargetForElements({
+      element: el,
+      getData: () => ({ order: task.order }),
+      onDragEnter: () => {},
+      onDragLeave: () => {},
+      onDrop: () => {},
+    });
+
+    return cleanup;
+  }, [task.order]);
+
   const handleSave = () => {
     if (title.trim()) {
       onUpdate(title.trim(), description.trim() || undefined);
@@ -65,6 +75,7 @@ export const TaskItem = ({ task, listId, onToggle, onUpdate, onDelete }: TaskIte
     <>
       <Box
         ref={ref}
+        data-order={task.order}
         sx={{
           display: 'flex',
           alignItems: 'center',

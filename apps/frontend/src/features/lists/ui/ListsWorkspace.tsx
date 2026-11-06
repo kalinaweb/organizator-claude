@@ -2,7 +2,7 @@
 
 import { Box, Button, Card, TextField, Typography } from '@mui/material';
 import { Add } from '@mui/icons-material';
-import { useState } from 'react';
+import { useState, useCallback, useRef } from 'react';
 import { ListCard } from './ListCard';
 import { EmptyState } from '@/shared/ui/EmptyState';
 import { useLists } from '../model/useLists';
@@ -13,9 +13,21 @@ interface ListsWorkspaceProps {
 }
 
 export const ListsWorkspace = ({ pageId, pageTitle }: ListsWorkspaceProps) => {
-  const { lists, createList, updateList, deleteList } = useLists(pageId);
+  const { lists, createList, updateList, deleteList, refetch } = useLists(pageId);
   const [isAdding, setIsAdding] = useState(false);
   const [newListTitle, setNewListTitle] = useState('');
+  const taskRefetchMapRef = useRef<Map<string, () => Promise<void>>>(new Map());
+
+  const registerTaskRefetch = useCallback((listId: string, refetchFn: () => Promise<void>) => {
+    taskRefetchMapRef.current.set(listId, refetchFn as () => Promise<void>);
+  }, []);
+
+  const refetchSourceList = useCallback(async (listId: string) => {
+    const refetchFn = taskRefetchMapRef.current.get(listId);
+    if (refetchFn) {
+      await refetchFn();
+    }
+  }, []);
 
   const handleCreateList = async () => {
     if (newListTitle.trim()) {
@@ -83,6 +95,9 @@ export const ListsWorkspace = ({ pageId, pageTitle }: ListsWorkspaceProps) => {
               list={list}
               onUpdateList={updateList}
               onDeleteList={deleteList}
+              onRefetch={refetch}
+              onRefetchSourceList={refetchSourceList}
+              onRegisterTaskRefetch={registerTaskRefetch}
             />
           ))}
 

@@ -12,6 +12,7 @@ import {
 } from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { ResortTaskListDto } from './dto/resort-task-list.dto';
 
 /**
  * Контроллер REST API для управления задачами (`/api/tasks`).
@@ -74,6 +75,20 @@ export class TasksController {
   }
 
   /**
+   * Пересчитывает order всех задач в списке линейно (1000, 2000, 3000...).
+   * Предотвращает "уплывание" order к 0 при частых перемещениях.
+   *
+   * @param req - Объект запроса Express с данными аутентифицированного пользователя.
+   * @param body - Идентификатор списка для пересчёта.
+   * @returns Промис с массивом обновлённых задач.
+   * @throws {NotFoundException} Если список не найден.
+   */
+  @Put('resort')
+  resort(@Request() req, @Body() dto: ResortTaskListDto) {
+    return this.tasksService.resort(dto.listId, req.user.id);
+  }
+
+  /**
    * Обновляет заголовок, описание, статус выполнения и/или порядок задачи.
    *
    * @param id - Идентификатор задачи.
@@ -96,6 +111,7 @@ export class TasksController {
       description?: string;
       completed?: boolean;
       order?: number;
+      listId?: string;
     },
   ) {
     return this.tasksService.update(id, req.user.id, body);

@@ -100,7 +100,7 @@ export function createLocalList(title: string, pageId: string): LocalList {
     localId: generateId(),
     title,
     pageId,
-    order: maxOrder + 100,
+    order: maxOrder + 1000,
     createdAt: now(),
     updatedAt: now(),
   };
@@ -164,7 +164,7 @@ export function createLocalTask(
     description,
     completed: false,
     listId,
-    order: maxOrder + 100,
+    order: maxOrder + 1000,
     createdAt: now(),
     updatedAt: now(),
   };

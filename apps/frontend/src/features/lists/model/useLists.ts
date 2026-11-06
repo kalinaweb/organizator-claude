@@ -29,6 +29,7 @@ export const useLists = (pageId: string | null) => {
   const [error, setError] = useState<string | null>(null);
 
   const fetchLists = useCallback(async () => {
+    
     if (!pageId) {
       setLists([]);
       return;
@@ -40,7 +41,7 @@ export const useLists = (pageId: string | null) => {
       if (isAuthenticated()) {
         const data = await listsApi.getAll(pageId);
         setLists(data);
-      } else {
+      } else {        
         const localLists = getLocalLists(pageId);
         setLists(localLists.map(localListToDisplay));
       }

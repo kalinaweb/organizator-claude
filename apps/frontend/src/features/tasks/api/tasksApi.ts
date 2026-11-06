@@ -17,6 +17,16 @@ export const tasksApi = {
     return data;
   },
 
+  async reorder(id: string, listId: string, order: number): Promise<Task> {
+    const { data } = await api.put<Task>(`/tasks/${id}`, { listId, order });
+    return data;
+  },
+
+  async resort(listId: string): Promise<Task[]> {
+    const { data } = await api.put<Task[]>(`/tasks/resort`, { listId });
+    return data;
+  },
+
   async delete(id: string): Promise<void> {
     await api.delete(`/tasks/${id}`);
   },

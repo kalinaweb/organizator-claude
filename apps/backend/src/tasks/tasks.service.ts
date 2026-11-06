@@ -55,7 +55,7 @@ export class TasksService {
         title: data.title,
         description: data.description,
         listId,
-        order: maxOrder ? maxOrder.order + 100 : 100,
+        order: maxOrder ? maxOrder.order + 1000 : 1000,
       },
     });
   }
@@ -133,6 +133,7 @@ export class TasksService {
       description?: string;
       completed?: boolean;
       order?: number;
+      listId?: string;
     },
   ) {
     const task = await this.prisma.task.findUnique({
@@ -148,6 +149,26 @@ export class TasksService {
 
     if (!task || task.list.page.userId !== userId) {
       throw new NotFoundException('Task not found');
+    }
+
+    // If listId is changing, verify the new list belongs to user's page
+    if (data.listId && data.listId !== task.listId) {
+      const newList = await this.prisma.list.findUnique({
+        where: { id: data.listId },
+        include: { page: true },
+      });
+
+      if (!newList || newList.page.userId !== userId) {
+        throw new NotFoundException('List not found');
+      }
+
+      // Старый список не пересчитываем здесь — frontend вызывает resort
+      // самостоятельно при перемещении между списками.
+    }
+
+    // Если order упал ниже минимального порога — пересчитываем весь список
+    if (data.order !== undefined && data.order < 500) {
+      await this._resortListUnsafe(task.listId);
     }
 
     return this.prisma.task.update({
@@ -185,5 +206,64 @@ export class TasksService {
     });
 
     return { message: 'Task deleted successfully' };
+  }
+
+  /**
+   * Пересчитывает order всех задач в списке линейно (1000, 2000, 3000...).
+   * Вызывается после reorder для предотвращения "уплывания" order к 0.
+   *
+   * @param listId - Идентификатор списка.
+   * @param userId - Идентификатор пользователя.
+   * @returns Промис с массивом обновлённых задач.
+   * @throws {NotFoundException} Если список не найден или не принадлежит пользователю.
+   */
+  async resort(listId: string, userId: string) {
+    const list = await this.prisma.list.findUnique({
+      where: { id: listId },
+      include: { page: true },
+    });
+
+    if (!list || list.page.userId !== userId) {
+      throw new NotFoundException('List not found');
+    }
+
+    const tasks = await this.prisma.task.findMany({
+      where: { listId },
+      orderBy: { order: 'asc' },
+    });
+
+    const updates = tasks.map((task, index) =>
+      this.prisma.task.update({
+        where: { id: task.id },
+        data: { order: (index + 1) * 1000 },
+      }),
+    );
+
+    if (updates.length > 0) {
+      await this.prisma.$transaction(updates);
+    }
+
+    return tasks;
+  }
+
+  /**
+   * Внутренний метод пересчёта order без проверки прав (используется при смене listId).
+   */
+  private async _resortListUnsafe(listId: string) {
+    const tasks = await this.prisma.task.findMany({
+      where: { listId },
+      orderBy: { order: 'asc' },
+    });
+
+    const updates = tasks.map((task, index) =>
+      this.prisma.task.update({
+        where: { id: task.id },
+        data: { order: (index + 1) * 1000 },
+      }),
+    );
+
+    if (updates.length > 0) {
+      await this.prisma.$transaction(updates);
+    }
   }
 }
