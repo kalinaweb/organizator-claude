@@ -41,9 +41,6 @@ export const TaskItem = ({ task, listId, onToggle, onUpdate, onDelete }: TaskIte
       onDrop: () => {
         setIsDragging(false);
       },
-      onDropCancelled: () => {
-        setIsDragging(false);
-      },
     });
 
     return cleanup;
