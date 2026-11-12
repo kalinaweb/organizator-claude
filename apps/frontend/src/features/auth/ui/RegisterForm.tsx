@@ -91,7 +91,7 @@ export const RegisterForm = () => {
 
       <Typography textAlign="center" variant="body2">
         Уже есть аккаунт?{' '}
-        <Link href="/login" style={{ color: '#1976d2' }}>
+        <Link href="/login" style={{ color: 'primary.main' }}>
           Войти
         </Link>
       </Typography>

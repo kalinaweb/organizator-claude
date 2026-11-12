@@ -76,8 +76,8 @@ export const PagesList = ({
           sx={{
             py: 1.25,
             fontWeight: 600,
-            background: 'linear-gradient(135deg, #9ce1f8 0%, #4f9ff8 100%)',
-            color: '#fff',
+            background: 'linear-gradient(135deg, #9ce1f8 0%, primary.main 100%)',
+            color: 'primary.contrastText',
           }}
         >
           Новая страница
@@ -107,9 +107,9 @@ export const PagesList = ({
               sx={{
                 borderRadius: 2,
                 '&.Mui-selected': {
-                  bgcolor: 'rgba(0, 188, 212, 0.08)',
+                  bgcolor: (theme) => `${theme.palette.primary.main}15`,
                   '&:hover': {
-                    bgcolor: 'rgba(0, 188, 212, 0.12)',
+                    bgcolor: (theme) => `${theme.palette.primary.main}20`,
                   },
                 },
               }}

@@ -3,11 +3,18 @@
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 
-const theme = createTheme({
+let theme = createTheme({
+  // Theme customization goes here as usual, including tonalOffset and/or
+  // contrastThreshold as the augmentColor() function relies on these
+});
+
+theme = createTheme(theme, {
   palette: {
     mode: 'light',
     primary: {
       main: '#4f9ff8',
+      dark: '#4590e6',
+      light: '#9ce1f8',
     },
     secondary: {
       main: '#FF6B9D',
@@ -15,6 +22,7 @@ const theme = createTheme({
     background: {
       default: '#F7F8FA',
       paper: '#FFFFFF',
+      progress: `linear-gradient(90deg, ${theme.palette.primary.light} 0%, ${theme.palette.primary.dark} 100%)`,      
     },
     text: {
       primary: '#2C3E50',
@@ -82,6 +90,14 @@ const theme = createTheme({
     '0px 2px 4px rgba(0, 0, 0, 0.04)',
   ],
   components: {
+    MuiInputBase: {
+      styleOverrides: {
+        root: {
+          borderRadius: 8,
+          padding: '8px 16px',          
+        },        
+      },
+    },
     MuiButton: {
       styleOverrides: {
         root: {
@@ -91,28 +107,22 @@ const theme = createTheme({
           '&:hover': {
             boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.1)',
           },
-        },
-        contained: {
-          background: 'linear-gradient(135deg, #9ce1f8 0%, #4f9ff8 100%)',
-          color: '#fff',
-        },
+          background: `linear-gradient(135deg, ${theme.palette.primary.light} 0%, ${theme.palette.primary.main} 100%)`,
+          color: theme.palette.getContrastText(theme.palette.primary.main),
+        },        
       },
     },
     MuiCard: {
       styleOverrides: {
-        root: {
-          borderRadius: 16,
-          boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.06)',
-          border: '1px solid #E8ECEF',
-        },
+        borderRadius: 16,
+        boxShadow: '0px 4px 12px rgba(0, 0, 0, 0.06)',
+        border: `1px solid ${theme.palette.divider}`,        
       },
     },
     MuiDrawer: {
       styleOverrides: {
-        paper: {
-          backgroundColor: '#FFFFFF',
-          borderRight: '1px solid #E8ECEF',
-        },
+        backgroundColor: theme.palette.background.paper,
+        borderRight: `1px solid ${theme.palette.divider}`,        
       },
     },
   },

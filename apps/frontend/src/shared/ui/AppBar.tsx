@@ -69,7 +69,7 @@ export const TopAppBar = () => {
               width: 36,
               height: 36,
               borderRadius: '10px',
-              background: 'linear-gradient(135deg, #9ce1f8 0%, #4f9ff8 100%)',
+              background: 'linear-gradient(135deg, #9ce1f8 0%, primary.main 100%)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -105,7 +105,7 @@ export const TopAppBar = () => {
                 sx={{
                   width: 40,
                   height: 40,
-                  background: 'linear-gradient(135deg, #FF6B9D 0%, #FF5E8E 100%)',
+                  background: 'linear-gradient(135deg, secondary.main 0%, secondary.dark 100%)',
                   fontWeight: 600,
                 }}
               >

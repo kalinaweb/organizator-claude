@@ -77,14 +77,14 @@ export const ListsWorkspace = ({ pageId, pageTitle }: ListsWorkspaceProps) => {
               height: 8,
             },
             '&::-webkit-scrollbar-track': {
-              bgcolor: '#F0F2F5',
+              bgcolor: 'background.default',
               borderRadius: 4,
             },
             '&::-webkit-scrollbar-thumb': {
-              bgcolor: '#C4CDD5',
+              bgcolor: 'text.secondary',
               borderRadius: 4,
               '&:hover': {
-                bgcolor: '#A8B3BD',
+                bgcolor: 'text.primary',
               },
             },
           }}
