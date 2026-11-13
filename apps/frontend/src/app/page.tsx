@@ -56,7 +56,7 @@ export default function Home() {
           {/* Sidebar */}
           <Box
             component="nav"
-            sx={{ width: { md: DRAWER_WIDTH }, flexShrink: { md: 0 } }}
+            sx={{ width: { md: DRAWER_WIDTH }, flexShrink: { md: 0 }, display: 'flex' }}
           >
             {isMobile ? (
               <Drawer
@@ -64,8 +64,9 @@ export default function Home() {
                 open={mobileOpen}
                 onClose={() => setMobileOpen(false)}
                 ModalProps={{ keepMounted: true }}
+                PaperProps={{ sx: { bgcolor: 'background.paper' } }}
                 sx={{
-                  '& .MuiDrawer-paper': { width: DRAWER_WIDTH },
+                  '& .MuiDrawer-paper': { width: DRAWER_WIDTH }
                 }}
               >
                 {drawer}
@@ -73,6 +74,7 @@ export default function Home() {
             ) : (
               <Drawer
                 variant="permanent"
+                PaperProps={{ sx: { bgcolor: 'background.paper' } }}
                 sx={{
                   '& .MuiDrawer-paper': {
                     width: DRAWER_WIDTH,

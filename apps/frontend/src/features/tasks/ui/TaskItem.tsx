@@ -132,10 +132,10 @@ export const TaskItem = ({ task, listId, onToggle, onUpdate, onDelete }: TaskIte
             </Typography>
           )}
         </Box>
-        <IconButton size="small" onClick={() => setEditDialogOpen(true)} sx={{ opacity: 0.6, '&:hover': { opacity: 1 } }}>
+        <IconButton size="small" onClick={() => setEditDialogOpen(true)} sx={{ opacity: 0.6, '&:hover': { opacity: 1 }, color: 'text.secondary' }}>
           <Edit fontSize="small" />
         </IconButton>
-        <IconButton size="small" onClick={onDelete} sx={{ opacity: 0.6, '&:hover': { opacity: 1 } }}>
+        <IconButton size="small" onClick={onDelete} sx={{ opacity: 0.6, '&:hover': { opacity: 1 }, color: 'text.secondary' }}>
           <Delete fontSize="small" />
         </IconButton>
       </Box>

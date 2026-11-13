@@ -196,10 +196,10 @@ export const ListCard = ({ list, onUpdateList, onDeleteList, onRefetch, onRefetc
         }
         action={
           <Box>
-            <IconButton size="small" onClick={() => setIsEditing(true)}>
+            <IconButton size="small" onClick={() => setIsEditing(true)} sx={{ color: 'text.secondary' }}>
               <Edit fontSize="small" />
             </IconButton>
-            <IconButton size="small" onClick={() => onDeleteList(list.id)}>
+            <IconButton size="small" onClick={() => onDeleteList(list.id)} sx={{ color: 'text.secondary' }}>
               <Delete fontSize="small" />
             </IconButton>
           </Box>

@@ -76,7 +76,7 @@ export const PagesList = ({
           sx={{
             py: 1.25,
             fontWeight: 600,
-            background: 'linear-gradient(135deg, #9ce1f8 0%, primary.main 100%)',
+            background: (t) => `linear-gradient(135deg, ${t.palette.primary.light} 0%, ${t.palette.primary.main} 100%)`,
             color: 'primary.contrastText',
           }}
         >
@@ -91,10 +91,10 @@ export const PagesList = ({
             disablePadding
             secondaryAction={
               <Box>
-                <IconButton size="small" onClick={() => openEditDialog(page)}>
+                <IconButton size="small" onClick={() => openEditDialog(page)} sx={{ color: 'text.secondary' }}>
                   <Edit fontSize="small" />
                 </IconButton>
-                <IconButton size="small" onClick={() => openDeleteDialog(page)}>
+                <IconButton size="small" onClick={() => openDeleteDialog(page)} sx={{ color: 'text.secondary' }}>
                   <Delete fontSize="small" />
                 </IconButton>
               </Box>

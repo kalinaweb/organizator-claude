@@ -38,7 +38,7 @@ export const ListsWorkspace = ({ pageId, pageTitle }: ListsWorkspaceProps) => {
   };
 
   return (
-    <Box sx={{ p: 4 }}>
+    <Box sx={{ p: 4, display: 'flex', flexDirection: 'column', height: '100%', background: 'url(/background-lists.svg)', backgroundRepeat: 'no-repeat', backgroundSize: 'cover', backgroundPositionY: '250px'}}>
       <Box sx={{ mb: 4, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <Typography variant="h4" sx={{ fontWeight: 700, color: 'text.primary' }}>
           {pageTitle}
@@ -52,6 +52,7 @@ export const ListsWorkspace = ({ pageId, pageTitle }: ListsWorkspaceProps) => {
             py: 1.25,
             fontWeight: 600,
             boxShadow: '0px 4px 12px rgba(0, 188, 212, 0.25)',
+            color: 'primary.contrastText',
           }}
         >
           Добавить список
@@ -73,6 +74,7 @@ export const ListsWorkspace = ({ pageId, pageTitle }: ListsWorkspaceProps) => {
             overflowX: 'auto',
             pb: 3,
             alignItems: 'flex-start',
+            flexGrow: 1,
             '&::-webkit-scrollbar': {
               height: 8,
             },
