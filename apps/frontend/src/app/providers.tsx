@@ -109,6 +109,7 @@ function buildTheme(mode: 'light' | 'dark'): Theme {
       '0px 2px 4px rgba(0, 0, 0, 0.04)',
       '0px 2px 4px rgba(0, 0, 0, 0.04)',
       '0px 2px 4px rgba(0, 0, 0, 0.04)',
+      '0px 2px 4px rgba(0, 0, 0, 0.04)',
     ],
   });
 
