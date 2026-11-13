@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Box, Drawer, useMediaQuery, useTheme } from '@mui/material';
 import { ProtectedRoute } from '@/shared';
 import { TopAppBar } from '@/shared/ui/AppBar';
@@ -8,7 +8,7 @@ import { EmptyState } from '@/shared/ui/EmptyState';
 import { PagesList } from '@/features/pages/ui/PagesList';
 import { ListsWorkspace } from '@/features/lists/ui/ListsWorkspace';
 import { usePages } from '@/features/pages';
-import { Assignment } from '@mui/icons-material';
+import { Assignment, Add } from '@mui/icons-material';
 
 const DRAWER_WIDTH = 280;
 
@@ -21,6 +21,13 @@ export default function Home() {
   const { pages, createPage, updatePage, deletePage } = usePages();
 
   const selectedPage = pages.find((p) => p.id === selectedPageId);
+
+  // Auto-select first page when pages exist and nothing is selected
+  useEffect(() => {
+    if (pages.length > 0 && !selectedPageId) {
+      setSelectedPageId(pages[0].id);
+    }
+  }, [pages, selectedPageId]);
 
   const handleSelectPage = (pageId: string) => {
     setSelectedPageId(pageId);
@@ -100,11 +107,19 @@ export default function Home() {
           >
             {selectedPage ? (
               <ListsWorkspace pageId={selectedPage.id} pageTitle={selectedPage.title} />
-            ) : (
+            ) : pages.length > 0 ? (
               <EmptyState
                 title="Выберите страницу"
                 description="Выберите страницу из списка слева или создайте новую"
                 icon={<Assignment sx={{ fontSize: 64 }} />}
+              />
+            ) : (
+              <EmptyState
+                title="Создайте страницу"
+                description="У вас ещё нет страниц. Создайте первую, чтобы начать работу"
+                actionLabel="Создать страницу"
+                onAction={() => createPage({ title: 'Моя страница' })}
+                icon={<Add sx={{ fontSize: 64 }} />}
               />
             )}
           </Box>
