@@ -162,7 +162,7 @@ export default function WelcomePage() {
       <Container maxWidth="lg" sx={{ position: 'relative', zIndex: 1, py: 8 }}>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 8, minHeight: '80vh' }}>
           {/* Left side - Hero content */}
-          <Box sx={{ flex: 1, color: '#2C3E50' }}>
+          <Box sx={{ flex: 1, color: 'text.primary' }}>
             <Typography
               variant="h3"
               sx={{
@@ -311,10 +311,10 @@ export default function WelcomePage() {
                     fontWeight: 600,
                     fontSize: '1rem',
                     mb: 2,
-                    background: 'linear-gradient(135deg, #9ce1f8 0%, #4f9ff8 100%)',
-                    color: '#fff',
+                    background: 'linear-gradient(135deg, #9ce1f8 0%, primary.main 100%)',
+                    color: 'primary.contrastText',
                     '&:hover': {
-                      background: 'linear-gradient(135deg, #8dd5ec 0%, #4590e6 100%)',
+                      background: 'linear-gradient(135deg, #8dd5ec 0%, primary.dark 100%)',
                     },
                   }}
                 >
@@ -334,11 +334,11 @@ export default function WelcomePage() {
                     fontWeight: 600,
                     fontSize: '1rem',
                     mb: 2,
-                    color: '#4f9ff8',
-                    borderColor: '#4f9ff8',
+                    color: 'primary.main',
+                    borderColor: 'primary.main',
                     borderWidth: '2px',
                     '&:hover': {
-                      borderColor: '#4590e6',
+                      borderColor: 'primary.dark',
                       borderWidth: '2px',
                       background: 'rgba(79, 159, 248, 0.08)',
                     },

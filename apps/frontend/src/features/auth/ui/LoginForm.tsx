@@ -82,7 +82,7 @@ export const LoginForm = () => {
 
       <Typography textAlign="center" variant="body2">
         Нет аккаунта?{' '}
-        <Link href="/register" style={{ color: '#1976d2' }}>
+        <Link href="/register" style={{ color: 'primary.main' }}>
           Зарегистрироваться
         </Link>
       </Typography>

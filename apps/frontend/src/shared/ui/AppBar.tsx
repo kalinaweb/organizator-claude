@@ -2,16 +2,18 @@
 
 import { AppBar, Toolbar, Typography, Button, Box, IconButton, Menu, MenuItem, Avatar } from '@mui/material';
 import { useRouter } from 'next/navigation';
-import { AccountCircle, Logout } from '@mui/icons-material';
+import { AccountCircle, Logout, WbSunny, WbSunnyOutlined } from '@mui/icons-material';
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/features/auth';
 import { authApi } from '@/features/auth';
 import { isAuthenticated, isLocalMode, logout, exitLocalMode } from '@/lib/auth';
+import { useThemeMode } from '@/app/providers';
 import type { User } from '@todo-app/shared';
 
 export const TopAppBar = () => {
   const router = useRouter();
   const { logout: authLogout } = useAuth();
+  const { themeMode, toggleTheme } = useThemeMode();
   const [user, setUser] = useState<User | null>(null);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [isAuth, setIsAuth] = useState(false);
@@ -57,7 +59,7 @@ export const TopAppBar = () => {
       position="sticky"
       elevation={0}
       sx={{
-        bgcolor: 'white',
+        bgcolor: 'background.paper',
         borderBottom: '1px solid',
         borderColor: 'divider',
       }}
@@ -69,13 +71,13 @@ export const TopAppBar = () => {
               width: 36,
               height: 36,
               borderRadius: '10px',
-              background: 'linear-gradient(135deg, #9ce1f8 0%, #4f9ff8 100%)',
+              background: 'linear-gradient(135deg, primary.light 0%, primary.main 100%)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
             }}
           >
-            <Typography variant="h6" sx={{ color: 'white', fontWeight: 700, fontSize: '1.125rem' }}>
+            <Typography variant="h6" sx={{ color: 'primary.contrastText', fontWeight: 700, fontSize: '1.125rem' }}>
               T
             </Typography>
           </Box>
@@ -92,53 +94,57 @@ export const TopAppBar = () => {
           </Typography>
         </Box>
 
-        {isAuth && user ? (
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-            <Typography variant="body2" sx={{ color: 'text.secondary', fontWeight: 500 }}>
-              {user.name || user.email}
-            </Typography>
-            <IconButton
-              onClick={handleMenu}
-              sx={{ p: 0 }}
-            >
-              <Avatar
-                sx={{
-                  width: 40,
-                  height: 40,
-                  background: 'linear-gradient(135deg, #FF6B9D 0%, #FF5E8E 100%)',
-                  fontWeight: 600,
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          <IconButton onClick={toggleTheme} sx={{ color: 'text.secondary' }}>
+            {themeMode === 'dark' ? <WbSunny /> : <WbSunnyOutlined />}
+          </IconButton>
+
+          {isAuth && user ? (
+            <>
+              <Typography variant="body2" sx={{ color: 'text.secondary', fontWeight: 500, mr: 1 }}>
+                {user.name || user.email}
+              </Typography>
+              <IconButton
+                onClick={handleMenu}
+                sx={{ p: 0 }}
+              >
+                <Avatar
+                  sx={{
+                    width: 40,
+                    height: 40,
+                    background: 'linear-gradient(135deg, secondary.main 0%, secondary.dark 100%)',
+                    fontWeight: 600,
+                  }}
+                >
+                  {(user.name || user.email)[0].toUpperCase()}
+                </Avatar>
+              </IconButton>
+              <Menu
+                anchorEl={anchorEl}
+                open={Boolean(anchorEl)}
+                onClose={handleClose}
+                PaperProps={{
+                  sx: {
+                    mt: 1.5,
+                    borderRadius: 2,
+                    minWidth: 200,
+                    boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.1)',
+                  },
                 }}
               >
-                {(user.name || user.email)[0].toUpperCase()}
-              </Avatar>
-            </IconButton>
-            <Menu
-              anchorEl={anchorEl}
-              open={Boolean(anchorEl)}
-              onClose={handleClose}
-              PaperProps={{
-                sx: {
-                  mt: 1.5,
-                  borderRadius: 2,
-                  minWidth: 200,
-                  boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.1)',
-                },
-              }}
-            >
-              <MenuItem disabled>
-                <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                  {user.email}
-                </Typography>
-              </MenuItem>
-              <MenuItem onClick={handleLogout} sx={{ mt: 0.5 }}>
-                <Logout fontSize="small" sx={{ mr: 1.5, color: 'text.secondary' }} />
-                <Typography variant="body2">Выйти</Typography>
-              </MenuItem>
-            </Menu>
-          </Box>
-        ) : (
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            {isLocal && (
+                <MenuItem disabled>
+                  <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+                    {user.email}
+                  </Typography>
+                </MenuItem>
+                <MenuItem onClick={handleLogout} sx={{ mt: 0.5 }}>
+                  <Logout fontSize="small" sx={{ mr: 1.5, color: 'text.secondary' }} />
+                  <Typography variant="body2">Выйти</Typography>
+                </MenuItem>
+              </Menu>
+            </>
+          ) : (
+            isLocal && (
               <Button
                 variant="outlined"
                 size="small"
@@ -151,13 +157,14 @@ export const TopAppBar = () => {
                   py: 1.25,
                   fontWeight: 600,
                   boxShadow: '0px 4px 12px rgba(0, 188, 212, 0.25)',
+                  color: 'primary.contrastText',
                 }}
               >
                 Зарегистрироваться
               </Button>
-            )}            
-          </Box>
-        )}
+            )
+          )}
+        </Box>
       </Toolbar>
     </AppBar>
   );

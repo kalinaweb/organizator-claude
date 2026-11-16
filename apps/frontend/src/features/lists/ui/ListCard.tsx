@@ -1,6 +1,6 @@
 'use client';
 
-import { Card, CardHeader, CardContent, IconButton, Box, TextField, Button, Typography } from '@mui/material';
+import { Card, CardHeader, CardContent, IconButton, Box, TextField, Button, Typography, ButtonGroup,InputBase  } from '@mui/material';
 import { Delete, Edit, Add } from '@mui/icons-material';
 import { useState, useEffect, useRef, useMemo } from 'react';
 import { dropTargetForElements, monitorForElements } from '@atlaskit/pragmatic-drag-and-drop/adapter/element-adapter';
@@ -165,7 +165,7 @@ export const ListCard = ({ list, onUpdateList, onDeleteList, onRefetch, onRefetc
         transition: 'all 0.2s ease',
         border: '2px solid transparent',
         ...(isHovered ? {
-          borderColor: '#00BCD4',
+          borderColor: 'primary.main',
           boxShadow: '0px 8px 24px rgba(0, 188, 212, 0.15)',
         } : {}),
         '&:hover': {
@@ -196,10 +196,10 @@ export const ListCard = ({ list, onUpdateList, onDeleteList, onRefetch, onRefetc
         }
         action={
           <Box>
-            <IconButton size="small" onClick={() => setIsEditing(true)}>
+            <IconButton size="small" onClick={() => setIsEditing(true)} sx={{ color: 'text.secondary' }}>
               <Edit fontSize="small" />
             </IconButton>
-            <IconButton size="small" onClick={() => onDeleteList(list.id)}>
+            <IconButton size="small" onClick={() => onDeleteList(list.id)} sx={{ color: 'text.secondary' }}>
               <Delete fontSize="small" />
             </IconButton>
           </Box>
@@ -221,7 +221,7 @@ export const ListCard = ({ list, onUpdateList, onDeleteList, onRefetch, onRefetc
             sx={{
               width: '100%',
               height: 6,
-              bgcolor: '#E8ECEF',
+              bgcolor: 'divider',
               borderRadius: 3,
               overflow: 'hidden',
             }}
@@ -230,7 +230,7 @@ export const ListCard = ({ list, onUpdateList, onDeleteList, onRefetch, onRefetc
               sx={{
                 width: `${progress}%`,
                 height: '100%',
-                background: 'linear-gradient(90deg, #00BCD4 0%, #00ACC1 100%)',
+                background: (theme) => theme.palette.background.progress,
                 transition: 'width 0.3s ease',
               }}
             />
@@ -239,7 +239,31 @@ export const ListCard = ({ list, onUpdateList, onDeleteList, onRefetch, onRefetc
       )}
 
       <CardContent sx={{ flexGrow: 1, pt: 0 }}>
-        <Box ref={tasksContainerRef} sx={{ display: 'flex', flexDirection: 'column', gap: 1.5 }}>
+        
+            <Box sx={{ display: 'flex', flexDirection: 'row', gap: 0, mt: 1 }}>
+              <ButtonGroup  sx={{ width: '100%', alignItems:' center', height: '39px' }} variant="contained" aria-label="Basic button group">
+                <InputBase                        
+                  size="small"
+                  placeholder="Добавить задачу"
+                  value={newTaskTitle}
+                  onChange={(e) => setNewTaskTitle(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') handleAddTask();
+                    if (e.key === 'Escape') setIsAddingTask(false);
+                  }}
+                  autoFocus
+                  fullWidth
+                />
+                <Box>
+                  <Button size="small" onClick={handleAddTask} variant="contained" sx={{ fontWeight: 600 }}>
+                    +
+                  </Button>                
+                </Box>
+              </ButtonGroup>
+              
+            </Box>
+          
+        <Box ref={tasksContainerRef} sx={{ display: 'flex', flexDirection: 'column', gap: 1.5, mt: 1.5 }}>
           {sortedTasks.map((task) => (
             <TaskItem
               key={task.id}
@@ -251,44 +275,7 @@ export const ListCard = ({ list, onUpdateList, onDeleteList, onRefetch, onRefetc
             />
           ))}
 
-          {isAddingTask ? (
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1.5, mt: 1 }}>
-              <TextField
-                size="small"
-                placeholder="Название задачи"
-                value={newTaskTitle}
-                onChange={(e) => setNewTaskTitle(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter') handleAddTask();
-                  if (e.key === 'Escape') setIsAddingTask(false);
-                }}
-                autoFocus
-                fullWidth
-              />
-              <Box sx={{ display: 'flex', gap: 1 }}>
-                <Button size="small" onClick={handleAddTask} variant="contained" sx={{ fontWeight: 600 }}>
-                  Добавить
-                </Button>
-                <Button size="small" onClick={() => setIsAddingTask(false)}>
-                  Отмена
-                </Button>
-              </Box>
-            </Box>
-          ) : (
-            <Button
-              startIcon={<Add />}
-              onClick={() => setIsAddingTask(true)}
-              size="small"
-              sx={{
-                mt: 1,
-                color: 'text.secondary',
-                fontWeight: 500,
-                justifyContent: 'flex-start',
-              }}
-            >
-              Добавить задачу
-            </Button>
-          )}
+          
         </Box>
       </CardContent>
     </Card>

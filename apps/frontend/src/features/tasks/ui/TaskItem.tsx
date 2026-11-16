@@ -79,16 +79,16 @@ export const TaskItem = ({ task, listId, onToggle, onUpdate, onDelete }: TaskIte
           gap: 1.5,
           p: 1.5,
           borderRadius: 2,
-          bgcolor: '#FAFBFC',
+          bgcolor: 'background.paper',
           border: '1px solid',
-          borderColor: '#E8ECEF',
+          borderColor: 'divider',
           transition: 'all 0.2s ease',
           opacity: isDragging ? 0.5 : 1,
           cursor: 'grab',
           '&:active': { cursor: 'grabbing' },
           '&:hover': {
-            bgcolor: '#F5F7F9',
-            borderColor: '#D4DCE4',
+            bgcolor: 'action.hover',
+            borderColor: 'action.focus',
             boxShadow: '0px 2px 8px rgba(0, 0, 0, 0.04)',
           },
         }}
@@ -98,9 +98,9 @@ export const TaskItem = ({ task, listId, onToggle, onUpdate, onDelete }: TaskIte
           onChange={(e) => onToggle(e.target.checked)}
           size="small"
           sx={{
-            color: '#D4DCE4',
+            color: 'divider',
             '&.Mui-checked': {
-              color: '#00BCD4',
+              color: 'primary.main',
             },
           }}
         />
@@ -132,10 +132,10 @@ export const TaskItem = ({ task, listId, onToggle, onUpdate, onDelete }: TaskIte
             </Typography>
           )}
         </Box>
-        <IconButton size="small" onClick={() => setEditDialogOpen(true)} sx={{ opacity: 0.6, '&:hover': { opacity: 1 } }}>
+        <IconButton size="small" onClick={() => setEditDialogOpen(true)} sx={{ opacity: 0.6, '&:hover': { opacity: 1 }, color: 'text.secondary' }}>
           <Edit fontSize="small" />
         </IconButton>
-        <IconButton size="small" onClick={onDelete} sx={{ opacity: 0.6, '&:hover': { opacity: 1 } }}>
+        <IconButton size="small" onClick={onDelete} sx={{ opacity: 0.6, '&:hover': { opacity: 1 }, color: 'text.secondary' }}>
           <Delete fontSize="small" />
         </IconButton>
       </Box>

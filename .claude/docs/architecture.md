@@ -77,7 +77,42 @@ src/
 
 - JWT токен хранится в `localStorage` (ключ `'token'`)
 - Компонент `ProtectedRoute` проверяет наличие токена и редиректит на `/login` при его отсутствии
-- Axios автоматически добавляет токен во все запросы
+
+### Темизация (Dark/Light Mode)
+
+Система тем реализована через React Context в `src/app/providers.tsx`:
+
+**Контекст:**
+```typescript
+interface ThemeContextValue {
+  themeMode: ThemeMode;       // 'light' | 'dark'
+  toggleTheme: () => void;
+}
+```
+
+**Хук:**
+```typescript
+import { useThemeMode } from '@/app/providers';
+
+const { themeMode, toggleTheme } = useThemeMode();
+```
+
+**Логика:**
+- Тема сохраняется в `localStorage` (ключ `'todo-app-theme'`)
+- При первом запуске без сохранённой темы — используется `prefers-color-scheme` ОС
+- Тема применяется через MUI `ThemeProvider` с динамическим созданием `createTheme()`
+- CSS-класс `light` / `dark` добавляется на `<html>` для стилизации через CSS-переменные
+- Компонент `ThemeProviderWrapper` обёртывает всё приложение в `layout.tsx`
+
+**Избегание flash:**
+- `useState` с lazy initializer для начальной темы
+- `useEffect` с флагом `mounted` — тема применяется только после монтирования
+- Это предотвращает mismatch между server и client rendering
+
+**Фоновые изображения:**
+- Светлая тема: `public/background-lists-light.svg`
+- Тёмная тема: `public/background-lists-dark.svg`
+- В компонентах: `url(/background-lists-${themeMode}.svg)`
 
 ## Backend архитектура
 
