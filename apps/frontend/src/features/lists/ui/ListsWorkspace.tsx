@@ -6,6 +6,7 @@ import { useState, useCallback, useRef } from 'react';
 import { ListCard } from './ListCard';
 import { EmptyState } from '@/shared/ui/EmptyState';
 import { useLists } from '../model/useLists';
+import { useThemeMode } from '@/app/providers';
 
 interface ListsWorkspaceProps {
   pageId: string;
@@ -13,6 +14,7 @@ interface ListsWorkspaceProps {
 }
 
 export const ListsWorkspace = ({ pageId, pageTitle }: ListsWorkspaceProps) => {
+  const { themeMode } = useThemeMode();
   const { lists, createList, updateList, deleteList, refetch } = useLists(pageId);
   const [isAdding, setIsAdding] = useState(false);
   const [newListTitle, setNewListTitle] = useState('');
@@ -38,7 +40,7 @@ export const ListsWorkspace = ({ pageId, pageTitle }: ListsWorkspaceProps) => {
   };
 
   return (
-    <Box sx={{ p: 4, display: 'flex', flexDirection: 'column', height: '100%', background: 'url(/background-lists.svg)', backgroundRepeat: 'no-repeat', backgroundSize: 'cover', backgroundPositionY: '250px'}}>
+    <Box sx={{ p: 4, display: 'flex', flexDirection: 'column', height: '100%', background: `url(/background-lists-${themeMode}.svg)`, backgroundRepeat: 'no-repeat', backgroundSize: 'cover', backgroundPositionY: '250px'}}>
       <Box sx={{ mb: 4, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <Typography variant="h4" sx={{ fontWeight: 700, color: 'text.primary' }}>
           {pageTitle}
