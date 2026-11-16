@@ -1,6 +1,7 @@
-# Todo App
+# Организатор
 
-Монорепозиторий приложения "Списки дел" с Next.js frontend и NestJS backend.
+Монорепозиторий приложения "Организатор" с Next.js frontend и NestJS backend.
+[Посмотреть демо](https://organizator-front.layero.app/)
 
 ## Структура проекта
 
