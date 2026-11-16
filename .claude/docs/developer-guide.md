@@ -258,6 +258,31 @@ newOrder = Math.max(...tasks.map(t => t.order)) + ORDER_GAP;
 - При cross-list перемещении рефетчатся оба списка (источник + целевой)
 - `useRef` хранит актуальные данные внутри замыкания DnD
 
+### Темизация (Dark/Light Mode)
+
+Система тем находится в `src/app/providers.tsx`. Экспортирует хук `useThemeMode` и провайдер `ThemeProviderWrapper`.
+
+**Использование:**
+```typescript
+import { useThemeMode } from '@/app/providers';
+
+const { themeMode, toggleTheme } = useThemeMode();
+// themeMode: 'light' | 'dark'
+// toggleTheme() — переключает тему
+```
+
+**Логика:**
+- Тема сохраняется в `localStorage` (ключ `'todo-app-theme'`)
+- При первом запуске без сохранённой темы — используется `prefers-color-scheme` ОС
+- Тема применяется через MUI `ThemeProvider` с динамическим `createTheme()`
+- CSS-класс `light` / `dark` добавляется на `<html>`
+- Избегание flash: тема применяется только после монтирования (`mounted` flag)
+
+**Фоновые изображения:**
+- Светлая тема: `public/background-lists-light.svg`
+- Тёмная тема: `public/background-lists-dark.svg`
+- Использование: `url(/background-lists-${themeMode}.svg)`
+
 1. Создать директорию в `src/features/<feature-name>/`
 2. Создать слои: `ui/`, `api/`, `model/`, `types/`
 3. Экспортировать публичный API через `index.ts`:
